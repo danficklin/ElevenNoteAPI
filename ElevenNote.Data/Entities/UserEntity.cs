@@ -9,9 +9,9 @@ namespace ElevenNote.Data.Entities
     public class UserEntity
     {
         [Key]
-        public int Id { get; set}
+        public int Id { get; set; }
         [Required]
-        public string Email { get; set}
+        public string Email { get; set; }
         [Required]
         public string Username { get; set; }
         [Required]
