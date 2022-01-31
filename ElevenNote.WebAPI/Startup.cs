@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ElevenNote.Data;
+using ElevenNote.Services.User;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,6 +31,7 @@ namespace ElevenNote.WebAPI
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection"); // Added connection string 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString)); // Added DBContext setup
+            services.AddScoped<IUserService, UserService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
