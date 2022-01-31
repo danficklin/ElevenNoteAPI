@@ -6,19 +6,18 @@ using System.Threading.Tasks;
 
 namespace ElevenNote.Data.Entities
 {
-    public class UserEntity
+    public class NoteEntity
     {
         [Key]
         public int Id { get; set; }
         [Required]
-        public string Email { get; set; }
+        public int OwnerId { get; set; }
         [Required]
-        public string Username { get; set; }
+        public string Title { get; set; }
         [Required]
-        public string Password { get; set; }
-        public string Forename { get; set; }
-        public string Surname { get; set; }
+        public string Content { get; set; }
         [Required]
-        public DateTime DateCreated { get; set; }
+        public DateTimeOffset CreatedUtc { get; set; }
+        public DateTimeOffset? ModifiedUtc { get; set; }
     }
 }
