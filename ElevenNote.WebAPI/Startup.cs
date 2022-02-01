@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ElevenNote.Data;
+using ElevenNote.Models.Maps;
 using ElevenNote.Services.Note;
 using ElevenNote.Services.Token;
 using ElevenNote.Services.User;
@@ -40,6 +41,7 @@ namespace ElevenNote.WebAPI
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<INoteService, NoteService>();
+            services.AddAutoMapper(typeof(NoteMapProfile));
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => 
             {
                 options.RequireHttpsMetadata = false;

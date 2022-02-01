@@ -8,6 +8,7 @@ using ElevenNote.Services.Note;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace ElevenNote.WebAPI.Controllers
 {
@@ -19,13 +20,13 @@ namespace ElevenNote.WebAPI.Controllers
         {
             _noteService = noteService;
         }
-        [HttpGet]
+        [HttpGet, ProducesResponseType(typeof(IEnumerable<NoteListItem>), 200)]
         public async Task<IActionResult> GetAllNotes()
         {
             var notes = await _noteService.GetAllNotesAsync();
             return Ok(notes);
         }
-        [HttpPost]
+        [HttpPost, ProducesResponseType(typeof(string), 200), ProducesResponseType(typeof(string), 400), ProducesResponseType(typeof(ModelStateDictionary), 400) ]
         public async Task<IActionResult> CreateNote([FromBody] NoteCreate request)
         {
             if(!ModelState.IsValid)
@@ -34,18 +35,27 @@ namespace ElevenNote.WebAPI.Controllers
                 return Ok("Note created successfully.");
             return BadRequest("Note could not be created.");
         }
-        [HttpGet("{noteId:int}")]
+        [HttpGet("{noteId:int}"), ProducesResponseType(typeof(NoteDetail), 200)]
         public async Task<IActionResult> GetNoteById([FromRoute] int noteId)
         {
             var detail = await _noteService.GetNoteByIdAsync(noteId);
             return detail is not null ? Ok(detail) : NotFound();
         }
-        [HttpPut]
+        [HttpPut, ProducesResponseType(typeof(ModelStateDictionary), 400), ProducesResponseType(typeof(NoteUpdate), 200)]
         public async Task<IActionResult> UpdateNoteById([FromBody] NoteUpdate request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            return await _noteService.UpdateNoteAsync(request) ? Ok("Note updated successfully") : BadRequest("Note could not be updated.");
+            return await _noteService.UpdateNoteAsync(request) 
+                ? Ok("Note updated successfully") 
+                : BadRequest("Note could not be updated.");
+        }
+        [HttpDelete("{noteId:int}"), ProducesResponseType(typeof(string), 200), ProducesResponseType(typeof(string), 400)]
+        public async Task<IActionResult> DeleteNote([FromRoute] int noteId)
+        {
+            return await _noteService.DeleteNoteAsync(noteId) 
+                ? Ok($"Note {noteId} was deleted successfully.") 
+                : BadRequest($"Note {noteId} could not be deleted.");
         }
     }
 }
