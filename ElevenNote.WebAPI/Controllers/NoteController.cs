@@ -33,5 +33,11 @@ namespace ElevenNote.WebAPI.Controllers
                 return Ok("Note created successfully.");
             return BadRequest("Note could not be created.");
         }
+        [HttpGet("{noteId:int}")]
+        public async Task<IActionResult> GetNoteById([FromRoute] int noteId)
+        {
+            var detail = await _noteService.GetNoteByIdAsync(noteId);
+            return detail is not null ? Ok(detail) : NotFound();
+        }
     }
 }
