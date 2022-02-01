@@ -4,6 +4,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ElevenNote.Data;
+using ElevenNote.Data.Entities;
+using ElevenNote.Models;
 using ElevenNote.Models.Note;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +36,20 @@ namespace ElevenNote.Services.Note
                     CreatedUtc = entity.CreatedUtc
                 })
                 .ToListAsync();
+            return notes;
+        }
+        public async Task<bool> CreateNoteAsync(NoteCreate request)
+        {
+            var noteEntity = new NoteEntity
+            {
+                Title = request.Title,
+                Content = request.Content,
+                CreatedUtc = DateTimeOffset.Now,
+                OwnerId = _userId
+            };
+            _dbContext.Notes.Add(noteEntity);
+            var numberOfChanges = await _dbContext.SaveChangesAsync();
+            return numberOfChanges == 1;
         }
     }
 }
